@@ -41,6 +41,10 @@ variable "access_identity_arn" {
   default = ""
 }
 
+variable "access_identity" {
+  default = false
+}
+
 variable "read_permissions" {
   default = [
     "s3:GetObject"

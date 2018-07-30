@@ -1,5 +1,5 @@
 data "aws_iam_policy_document" "access_identity" {
-  count = "${var.access_identity_arn != "" ? 1 : 0}"
+  count = "${var.access_identity ? 1 : 0}"
   statement {
     actions   = ["s3:GetObject"]
     resources = ["arn:aws:s3:::$${bucket_name}$${origin_path}*"]
@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "access_identity" {
 }
 
 data "template_file" "access_identity" {
-  count = "${var.access_identity_arn != "" ? 1 : 0}"
+  count = "${var.access_identity ? 1 : 0}"
   template = "${data.aws_iam_policy_document.access_identity.json}"
 
   vars {

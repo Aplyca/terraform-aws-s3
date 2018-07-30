@@ -19,7 +19,7 @@ resource "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_bucket_policy" "access_identity" {
-  count = "${var.access_identity_arn != "" ? 1 : 0}"
+  count = "${var.access_identity ? 1 : 0}"
   bucket = "${aws_s3_bucket.this.id}"
   policy = "${data.template_file.access_identity.rendered}"
 }
