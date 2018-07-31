@@ -80,6 +80,5 @@ data "template_file" "public" {
 }
 
 data "template_file" "write" {
-  count = "${var.acl == "public-read" ? 1 : 0}"
   template = "${data.aws_iam_policy_document.write.json}"
 }
