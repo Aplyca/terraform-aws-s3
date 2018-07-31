@@ -42,3 +42,16 @@ resource "aws_iam_role_policy_attachment" "read" {
   role = "${element(var.read_roles, count.index)}"
   policy_arn = "${aws_iam_policy.read.arn}"
 }
+
+resource "aws_iam_policy" "write" {
+  count = "${length(var.write_roles) > 0 ? 1 : 0}"
+  name   = "${local.id}-S3-Write"
+  description = "${var.description} Write"
+  policy = "${data.aws_iam_policy_document.write.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "write" {
+  count = "${length(var.write_roles)}"
+  role = "${element(var.write_roles, count.index)}"
+  policy_arn = "${aws_iam_policy.write.arn}"
+}

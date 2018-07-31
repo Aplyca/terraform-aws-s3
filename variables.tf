@@ -55,7 +55,9 @@ variable "read_permissions" {
 }
 
 variable "write_permissions" {
-  default = []
+  default = [
+    "s3:PutObject"
+  ]
 
   type        = "list"
   description = "Send permissions granted to assumed role"
