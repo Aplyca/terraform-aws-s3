@@ -43,6 +43,19 @@ data "aws_iam_policy_document" "read" {
   }
 }
 
+data "aws_iam_policy_document" "write" {
+  statement {
+    actions = [
+      "${var.write_permissions}"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.this.arn}/*"
+    ]
+  }
+}
+
+
 data "aws_iam_policy_document" "public" {
   count = "${var.acl == "public-read" ? 1 : 0}"
   statement {
@@ -64,4 +77,8 @@ data "aws_iam_policy_document" "public" {
 data "template_file" "public" {
   count = "${var.acl == "public-read" ? 1 : 0}"
   template = "${data.aws_iam_policy_document.public.json}"
+}
+
+data "template_file" "write" {
+  template = "${data.aws_iam_policy_document.write.json}"
 }
