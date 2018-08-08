@@ -87,3 +87,8 @@ variable "website" {
   description = "Website settings"
   default     = []
 }
+
+variable "versioning_enabled" {
+  description = "Enable versioning of bucket objects"
+  default     = false
+}

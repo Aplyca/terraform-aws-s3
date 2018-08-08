@@ -98,5 +98,6 @@ These variables have default values and don't have to be set to use this module.
 - website
 - write_permissions
 - write_roles
+- versioning_enabled
 
 For more reference please check in the Terraform Module Registry: https://registry.terraform.io/modules/Aplyca/s3/aws/0.1.3

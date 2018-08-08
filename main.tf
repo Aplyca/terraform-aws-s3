@@ -15,6 +15,10 @@ resource "aws_s3_bucket" "this" {
     max_age_seconds = "${var.cors_max_age_seconds}"
   }
 
+  versioning {
+    enabled = "${var.versioning_enabled}"
+  }
+
   website = ["${var.website}"]
 }
 
