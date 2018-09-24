@@ -38,7 +38,8 @@ data "aws_iam_policy_document" "read" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}/*"
+      "${aws_s3_bucket.this.arn}/*",
+      "${aws_s3_bucket.this.arn}"
     ]
   }
 }

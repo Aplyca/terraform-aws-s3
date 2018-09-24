@@ -47,7 +47,8 @@ variable "access_identity" {
 
 variable "read_permissions" {
   default = [
-    "s3:GetObject"
+    "s3:GetObject",
+    "s3:ListBucket"
   ]
 
   type        = "list"
@@ -56,7 +57,8 @@ variable "read_permissions" {
 
 variable "write_permissions" {
   default = [
-    "s3:PutObject"
+    "s3:PutObject",
+    "s3:DeleteObject"
   ]
 
   type        = "list"
