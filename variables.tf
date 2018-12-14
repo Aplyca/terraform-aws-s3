@@ -85,3 +85,8 @@ variable "website" {
   description = "Website settings"
   default     = []
 }
+
+variable "versioning" {
+  description = "Bucket versioning"
+  default     = false
+}
