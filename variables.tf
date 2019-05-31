@@ -94,3 +94,9 @@ variable "versioning_enabled" {
   description = "Enable versioning of bucket objects"
   default     = false
 }
+
+variable "lifecycle_rule" {
+  description = "(Optional) A configuration of object lifecycle management"
+  type        = "list"
+  default     = []
+}

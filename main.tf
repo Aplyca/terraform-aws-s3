@@ -20,6 +20,8 @@ resource "aws_s3_bucket" "this" {
   }
 
   website = ["${var.website}"]
+
+  lifecycle_rule = "${var.lifecycle_rule}"
 }
 
 resource "aws_s3_bucket_policy" "access_identity" {
