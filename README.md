@@ -22,7 +22,7 @@ module "public_static_bucket" {
 
   logging = [
     {
-      target_bucket = "loggingbucketname"
+      target_bucket = "logging-bucket-name"
       target_prefix = "log/"
     }
 
