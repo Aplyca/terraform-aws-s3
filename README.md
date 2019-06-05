@@ -25,6 +25,7 @@ module "public_static_bucket" {
       target_bucket = "logging-bucket-name"
       target_prefix = "log/"
     }
+  ]
 
   cors_allowed_origins = ["*"]
   cors_allowed_headers = ["*"]
