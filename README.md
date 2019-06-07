@@ -20,6 +20,13 @@ module "public_static_bucket" {
     error_document = "index.html"
   }]
 
+  logging = [
+    {
+      target_bucket = "logging-bucket-name"
+      target_prefix = "log/"
+    }
+  ]
+
   cors_allowed_origins = ["*"]
   cors_allowed_headers = ["*"]
   cors_allowed_methods = ["GET"]
@@ -91,6 +98,7 @@ These variables have default values and don't have to be set to use this module.
 - cors_expose_headers
 - cors_max_age_seconds
 - description
+- logging
 - name
 - read_permissions
 - read_roles
