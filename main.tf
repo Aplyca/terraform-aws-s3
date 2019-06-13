@@ -15,27 +15,83 @@ resource "aws_s3_bucket" "this" {
     max_age_seconds = "${var.cors_max_age_seconds}"
   }
 
-  logging = "${var.logging}"
+  dynamic "logging" {
+    for_each = var.logging
+    content {
+      target_bucket = lookup(logging.value, "target_bucket")
+      target_prefix = lookup(logging.value, "target_prefix", null)
+    }
+  }
 
   versioning {
     enabled = "${var.versioning_enabled}"
   }
 
-  website = ["${var.website}"]
+  dynamic "website" {
+    for_each = var.website
+    content {
+      index_document           = lookup(website.value, "index_document")
+      error_document           = lookup(website.value, "error_document", null)
+      redirect_all_requests_to = lookup(website.value, "redirect_all_requests_to", null)
+      routing_rules            = lookup(website.value, "routing_rules", null)
+    }
+  }
 
-  lifecycle_rule = "${var.lifecycle_rule}"
+  dynamic "lifecycle_rule" {
+    for_each = var.lifecycle_rule
+    content {
+      id                                     = lookup(lifecycle_rule.value, "id", null)
+      prefix                                 = lookup(lifecycle_rule.value, "prefix", null)
+      tags                                   = lookup(lifecycle_rule.value, "tags", null)
+      enabled                                = lookup(lifecycle_rule.value, "enabled")
+      abort_incomplete_multipart_upload_days = lookup(lifecycle_rule.value, "abort_incomplete_multipart_upload_days", null)
+
+      dynamic "expiration" {
+        for_each = lookup(lifecycle_rule.value, "expiration", [])
+        content {
+          days                         = lookup(expiration.value, "days", null)
+          date                         = lookup(expiration.value, "date", null)
+          expired_object_delete_marker = lookup(expiration.value, "expired_object_delete_marker", null)
+        }
+      }
+
+      dynamic "transition" {
+        for_each = lookup(lifecycle_rule.value, "transition", [])
+        content {
+          days          = lookup(transition.value, "days", null)
+          date          = lookup(transition.value, "date", null)
+          storage_class = lookup(transition.value, "storage_class")
+        }
+      }
+
+      dynamic "noncurrent_version_expiration" {
+        for_each = lookup(lifecycle_rule.value, "noncurrent_version_expiration", [])
+        content {
+          days = lookup(noncurrent_version_expiration.value, "days")
+        }
+      }
+
+      dynamic "noncurrent_version_transition" {
+        for_each = lookup(lifecycle_rule.value, "noncurrent_version_transition", [])
+        content {
+          days          = lookup(noncurrent_version_transition.value, "days")
+          storage_class = lookup(noncurrent_version_transition.value, "storage_class")
+        }
+      }
+    }
+  }
 }
 
 resource "aws_s3_bucket_policy" "access_identity" {
   count  = "${var.access_identity ? 1 : 0}"
   bucket = "${aws_s3_bucket.this.id}"
-  policy = "${data.template_file.access_identity.rendered}"
+  policy = "${element(data.template_file.access_identity.*.rendered, 0)}"
 }
 
 resource "aws_s3_bucket_policy" "public" {
   count  = "${var.acl == "public-read" ? 1 : 0}"
   bucket = "${aws_s3_bucket.this.id}"
-  policy = "${data.template_file.public.rendered}"
+  policy = "${element(data.template_file.public.*.rendered, 0)}"
 }
 
 resource "aws_iam_policy" "read" {
@@ -48,7 +104,7 @@ resource "aws_iam_policy" "read" {
 resource "aws_iam_role_policy_attachment" "read" {
   count      = "${length(var.read_roles)}"
   role       = "${element(var.read_roles, count.index)}"
-  policy_arn = "${aws_iam_policy.read.arn}"
+  policy_arn = "${element(aws_iam_policy.read.*.arn, 0)}"
 }
 
 resource "aws_iam_policy" "write" {
@@ -61,5 +117,5 @@ resource "aws_iam_policy" "write" {
 resource "aws_iam_role_policy_attachment" "write" {
   count      = "${length(var.write_roles)}"
   role       = "${element(var.write_roles, count.index)}"
-  policy_arn = "${aws_iam_policy.write.arn}"
+  policy_arn = "${element(aws_iam_policy.write.*.arn, 0)}"
 }
