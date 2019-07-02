@@ -22,10 +22,10 @@ data "aws_iam_policy_document" "access_identity" {
 }
 
 data "template_file" "access_identity" {
-  count = "${var.access_identity ? 1 : 0}"
-  template = "${data.aws_iam_policy_document.access_identity.json}"
+  count    = "${var.access_identity ? 1 : 0}"
+  template = "${element(data.aws_iam_policy_document.access_identity.*.json, 0)}"
 
-  vars {
+  vars = {
     origin_path = "/"
     bucket_name = "${aws_s3_bucket.this.id}"
   }
@@ -33,9 +33,7 @@ data "template_file" "access_identity" {
 
 data "aws_iam_policy_document" "read" {
   statement {
-    actions = [
-      "${var.read_permissions}"
-    ]
+    actions = "${var.read_permissions}"
 
     resources = [
       "${aws_s3_bucket.this.arn}/*",
@@ -46,9 +44,7 @@ data "aws_iam_policy_document" "read" {
 
 data "aws_iam_policy_document" "write" {
   statement {
-    actions = [
-      "${var.write_permissions}"
-    ]
+    actions = "${var.write_permissions}"
 
     resources = [
       "${aws_s3_bucket.this.arn}/*"
@@ -60,9 +56,7 @@ data "aws_iam_policy_document" "write" {
 data "aws_iam_policy_document" "public" {
   count = "${var.acl == "public-read" ? 1 : 0}"
   statement {
-    actions = [
-      "${var.read_permissions}"
-    ]
+    actions = "${var.read_permissions}"
 
     principals {
       type        = "AWS"
@@ -76,8 +70,8 @@ data "aws_iam_policy_document" "public" {
 }
 
 data "template_file" "public" {
-  count = "${var.acl == "public-read" ? 1 : 0}"
-  template = "${data.aws_iam_policy_document.public.json}"
+  count    = "${var.acl == "public-read" ? 1 : 0}"
+  template = "${element(data.aws_iam_policy_document.public.*.json, 0)}"
 }
 
 data "template_file" "write" {
