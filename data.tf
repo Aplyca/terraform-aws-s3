@@ -64,6 +64,7 @@ data "aws_iam_policy_document" "public" {
     }
 
     resources = [
+      "${aws_s3_bucket.this.arn}",
       "${aws_s3_bucket.this.arn}/*"
     ]
   }
