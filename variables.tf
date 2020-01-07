@@ -4,7 +4,7 @@ variable "name" {
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map
   default     = {}
   description = "Additional tags (e.g. map('BusinessUnit`,`XYZ`)"
 }
@@ -14,27 +14,32 @@ variable "bucket_domain_format" {
 }
 
 variable "cors_allowed_headers" {
-  type    = "list"
+  type    = list
   default = ["*"]
 }
 
 variable "cors_allowed_methods" {
-  type    = "list"
+  type    = list
   default = ["GET"]
 }
 
 variable "cors_allowed_origins" {
-  type    = "list"
+  type    = list
   default = ["*"]
 }
 
 variable "cors_expose_headers" {
-  type    = "list"
+  type    = list
   default = ["ETag"]
 }
 
 variable "cors_max_age_seconds" {
   default = "0"
+}
+
+variable "logging" {
+  type    = list
+  default = []
 }
 
 variable "access_identity_arn" {
@@ -47,17 +52,21 @@ variable "access_identity" {
 
 variable "read_permissions" {
   default = [
-    "s3:GetObject"
+    "s3:GetObject",
+    "s3:ListBucket",
   ]
 
-  type        = "list"
+  type        = list
   description = "Recieve permissions granted to assumed role"
 }
 
 variable "write_permissions" {
-  default = []
+  default = [
+    "s3:PutObject",
+    "s3:DeleteObject",
+  ]
 
-  type        = "list"
+  type        = list
   description = "Send permissions granted to assumed role"
 }
 
@@ -86,7 +95,13 @@ variable "website" {
   default     = []
 }
 
-variable "versioning" {
-  description = "Bucket versioning"
+variable "versioning_enabled" {
+  description = "Enable versioning of bucket objects"
   default     = false
+}
+
+variable "lifecycle_rule" {
+  description = "(Optional) A configuration of object lifecycle management"
+  type        = list
+  default     = []
 }
