@@ -57,6 +57,23 @@ module "nonpublic_files_bucket" {
 }
 ```
 
+## Add bucket replication
+
+
+``` yaml
+  replication_role = aws_iam_role.replication.arn
+  replication_rules = [
+    {
+      id = "${local.name}-qa-replication"
+      status = "Enabled"
+      #prefix = "foo"
+      destination-bucket = var.app["arn-bucket-rep-dest"]
+      destination-storage_class = "STANDARD"
+    }
+  ]      
+```
+
+
 ## How to reference the bucket
 >
 > Examples using the *nonpublic_files_bucket* sample:
