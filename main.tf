@@ -84,6 +84,25 @@ resource "aws_s3_bucket" "this" {
       }
     }
   }
+  
+  dynamic "replication_configuration" {
+    for_each = var.replication_role != "" ? [var.replication_role] : []
+    content {
+      role = var.replication_role
+      dynamic rules {
+        for_each = var.replication_rules
+        content {
+          id     = rules.value.id
+          prefix = lookup(rules.value, "rules-prefix", null)
+          status = rules.value.status
+          destination {
+            bucket        = rules.value.destination-bucket
+            storage_class = rules.value.destination-storage_class
+          }
+        }
+      }
+    }
+  
 }
 
 resource "aws_s3_bucket_policy" "access_identity" {
