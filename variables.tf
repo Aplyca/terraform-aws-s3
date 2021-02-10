@@ -105,3 +105,14 @@ variable "lifecycle_rule" {
   type        = list
   default     = []
 }
+
+ variable "replication_rules" {
+    description = "Replication rules"
+    type = list
+    default = []
+ }
+
+ variable "replication_role" {
+    description = "Replication role"
+    default = ""
+ }
