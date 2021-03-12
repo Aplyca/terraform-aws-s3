@@ -102,7 +102,7 @@ resource "aws_s3_bucket" "this" {
         }
       }
     }
-  
+  }
 }
 
 resource "aws_s3_bucket_policy" "access_identity" {
